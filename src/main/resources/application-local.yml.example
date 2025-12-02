@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/your_database_name
+    username: root
+    password: YOUR_PASSWORD_HERE  # 실제 비밀번호로 변경하세요
+    driver-class-name: com.mysql.cj.jdbc.Driver
