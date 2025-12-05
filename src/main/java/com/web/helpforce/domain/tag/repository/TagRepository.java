@@ -1,6 +1,6 @@
-package com.web.helpforce.question.repository;
+package com.web.helpforce.domain.question.repository;
 
-import com.web.helpforce.question.entity.Tag;
+import com.web.helpforce.domain.tag.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
