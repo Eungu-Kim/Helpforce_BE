@@ -31,6 +31,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final QuestionRepository questionRepository;
+    private final AnswerRepository answerRepository;
+    private final QuestionBookmarkRepository questionBookmarkRepository;
 
     public MyQuestionsResponse getMyQuestions(Long userId, int page, int size) {
         // 1. 사용자 존재 확인
@@ -86,7 +88,7 @@ public class UserService {
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdAt"));
 
         // 3. 내가 답변한 모든 답변 조회 (댓글 + 대댓글)
-        Page<Answer> myAnswers = AnswerRepository.findByUser_IdAndIsDeletedFalseOrderByCreatedAtAsc(userId, pageable);
+        Page<Answer> myAnswers = answerRepository.findByUser_IdAndIsDeletedFalseOrderByCreatedAtAsc(userId, pageable);
 
         // 4. 질문별로 그룹핑하여 가장 먼저 작성한 답변만 선택
         Map<Long, Answer> questionToFirstAnswer = new LinkedHashMap<>();
@@ -115,7 +117,7 @@ public class UserService {
 
                             // 대댓글인 경우 부모 답변 정보 추가
                             if (firstAnswer.getParentAnswerId() != null) {
-                                Answer parentAnswer = AnswerRepository.findById(firstAnswer.getParentAnswerId())
+                                Answer parentAnswer = answerRepository.findById(firstAnswer.getParentAnswerId())
                                         .orElse(null);
 
                                 if (parentAnswer != null) {
@@ -142,7 +144,7 @@ public class UserService {
                             }
 
                             // 북마크 여부 확인
-                            boolean isBookmarked = QuestionBookmarkRepository
+                            boolean isBookmarked = questionBookmarkRepository
                                     .existsByQuestion_IdAndUser_Id(question.getId(), userId);
 
                             return MyAnsweredQuestionsResponse.AnsweredQuestionDto.builder()

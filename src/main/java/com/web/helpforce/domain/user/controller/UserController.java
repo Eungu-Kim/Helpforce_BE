@@ -1,5 +1,6 @@
 package com.web.helpforce.domain.user.controller;
 
+import com.web.helpforce.domain.user.dto.MyAnsweredQuestionsResponse;
 import com.web.helpforce.domain.user.dto.MyQuestionsResponse;
 import com.web.helpforce.domain.user.service.UserService;
 import com.web.helpforce.global.exception.UnauthorizedException;
