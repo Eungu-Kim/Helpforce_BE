@@ -30,4 +30,20 @@ public class UserController {
 
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/answered-questions")
+    public ResponseEntity<MyAnsweredQuestionsResponse> getMyAnsweredQuestions(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int size,
+            Authentication authentication) {
+
+        if (authentication == null || !(authentication.getPrincipal() instanceof Long)) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
+        }
+        Long currentUserId = (Long) authentication.getPrincipal();
+
+        MyAnsweredQuestionsResponse response = userService.getMyAnsweredQuestions(currentUserId, page, size);
+
+        return ResponseEntity.ok(response);
+    }
 }
