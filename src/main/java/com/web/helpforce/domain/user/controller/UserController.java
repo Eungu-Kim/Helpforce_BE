@@ -17,19 +17,25 @@ public class UserController {
 
     private final UserService userService;
 
+    private Long requireUserId(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
+        }
+        return Long.parseLong(authentication.getName());
+    }
+
+    private int toPageIndex(int page) {
+        return Math.max(page - 1, 0);
+    }
+
     @GetMapping("/questions")
     public ResponseEntity<MyQuestionsResponse> getMyQuestions(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size,
             Authentication authentication) {
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof Long)) {
-            throw new UnauthorizedException("로그인이 필요합니다.");
-        }
-        Long currentUserId = (Long) authentication.getPrincipal();
-
-        MyQuestionsResponse response = userService.getMyQuestions(currentUserId, page, size);
-
+        Long currentUserId = requireUserId(authentication);
+        MyQuestionsResponse response = userService.getMyQuestions(currentUserId, toPageIndex(page), size);
         return ResponseEntity.ok(response);
     }
 
@@ -39,13 +45,8 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size,
             Authentication authentication) {
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof Long)) {
-            throw new UnauthorizedException("로그인이 필요합니다.");
-        }
-        Long currentUserId = (Long) authentication.getPrincipal();
-
-        MyAnsweredQuestionsResponse response = userService.getMyAnsweredQuestions(currentUserId, page, size);
-
+        Long currentUserId = requireUserId(authentication);
+        MyAnsweredQuestionsResponse response = userService.getMyAnsweredQuestions(currentUserId, toPageIndex(page), size);
         return ResponseEntity.ok(response);
     }
 
@@ -55,13 +56,8 @@ public class UserController {
             @RequestParam(defaultValue = "10") int size,
             Authentication authentication) {
 
-        if (authentication == null || !(authentication.getPrincipal() instanceof Long)) {
-            throw new UnauthorizedException("로그인이 필요합니다.");
-        }
-        Long currentUserId = (Long) authentication.getPrincipal();
-
-        BookmarkedQuestionsResponse response = userService.getBookmarkedQuestions(currentUserId, page, size);
-
+        Long currentUserId = requireUserId(authentication);
+        BookmarkedQuestionsResponse response = userService.getBookmarkedQuestions(currentUserId, toPageIndex(page), size);
         return ResponseEntity.ok(response);
     }
 }

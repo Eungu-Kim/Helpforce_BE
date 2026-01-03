@@ -1,9 +1,8 @@
 package com.web.helpforce.domain.user.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.web.helpforce.domain.user.entity.User;
+import lombok.*;
 
 @Getter
 @NoArgsConstructor
@@ -11,31 +10,29 @@ import lombok.NoArgsConstructor;
 @Builder
 public class LoginResponseDto {
 
-    private String message;
-    private UserInfoDto user;
+    @JsonProperty("accessToken")
     private String accessToken;
-    private String refreshToken;
+
+    private UserInfoDto user;
 
     @Getter
-    @Builder
-    @AllArgsConstructor
     @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
     public static class UserInfoDto {
         private Long id;
         private String email;
         private String nickname;
     }
 
-    public static LoginResponseDto of(String accessToken, String refreshToken, Long userId, String email, String nickname) {
+    public static LoginResponseDto of(String accessToken, User user) {
         return LoginResponseDto.builder()
-                .message("로그인 성공")
-                .user(UserInfoDto.builder()
-                        .id(userId)
-                        .email(email)
-                        .nickname(nickname)
-                        .build())
                 .accessToken(accessToken)
-                .refreshToken(refreshToken)
+                .user(UserInfoDto.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .nickname(user.getNickname())
+                        .build())
                 .build();
     }
 }
