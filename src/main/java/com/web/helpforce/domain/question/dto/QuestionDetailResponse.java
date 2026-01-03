@@ -14,28 +14,23 @@ import java.util.List;
 @Builder
 public class QuestionDetailResponse {
 
-    private QuestionDto question;
-    private List<AnswerDto> answers;
-    private List<AttachmentDto> attachments;
+    private Long id;
+    private String title;
+    private String body;
+    private String status;
+    private Integer views;
 
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class QuestionDto {
-        private Long id;
-        private String title;
-        private String body;
-        private String status;
-        private Integer views;
-        private Boolean isBookmarked;
-        private Long acceptedAnswerId;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private UserSummary user;
-        private List<Long> tagIds;
-        private Long answerCount;
-    }
+    private Boolean isBookmarked;
+    private Long acceptedAnswerId;
+
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+
+    private UserSummary user;
+
+    private List<Long> tagIds;
+    private List<AttachmentDto> attachments;
+    private List<AnswerDto> answers;
 
     @Getter
     @NoArgsConstructor
@@ -44,7 +39,16 @@ public class QuestionDetailResponse {
     public static class UserSummary {
         private Long id;
         private String nickname;
-        private String email;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class AttachmentDto {
+        private Long id;
+        private String fileUrl;
+        private String mimeType;
     }
 
     @Getter
@@ -54,25 +58,19 @@ public class QuestionDetailResponse {
     public static class AnswerDto {
         private Long id;
         private String body;
-        private Long parentAnswerId;
+
         private Boolean isAccepted;
-        private LocalDateTime createdAt;
-        private LocalDateTime updatedAt;
-        private UserSummary user;
+
         private Long likeCount;
         private Boolean isLiked;
-        private List<AnswerDto> replies;
-    }
 
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class AttachmentDto {
-        private Long id;
-        private Long questionId;
-        private Long answerId;
-        private String fileUrl;
-        private String mimeType;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        private UserSummary user;
+
+        private List<AnswerDto> childAnswers;
+
+        private Long parentAnswerId;
     }
 }

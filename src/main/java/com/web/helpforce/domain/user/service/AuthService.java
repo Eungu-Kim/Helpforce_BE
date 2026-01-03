@@ -1,9 +1,9 @@
 package com.web.helpforce.domain.user.service;
 
 import com.web.helpforce.domain.user.dto.*;
-import com.web.helpforce.global.config.JwtTokenProvider;
 import com.web.helpforce.domain.user.entity.User;
 import com.web.helpforce.domain.user.repository.UserRepository;
+import com.web.helpforce.global.config.JwtTokenProvider;
 import com.web.helpforce.global.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,50 +21,43 @@ public class AuthService {
 
     @Transactional
     public LoginResponseDto login(LoginRequestDto requestDto) {
-        // 1. 이메일로 사용자 찾기
+        // 1) 이메일로 사용자 찾기
         User user = userRepository.findByEmail(requestDto.getEmail())
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다."));
 
-        // 2. 비밀번호 검증
+        // 2) 비밀번호 검증
         if (!passwordEncoder.matches(requestDto.getPassword(), user.getPasswordHash())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 일치하지 않습니다.");
         }
 
-        // 3. JWT 토큰 생성
+        // 3) Access Token 생성
         String accessToken = jwtTokenProvider.createAccessToken(user.getId(), user.getEmail());
-        String refreshToken = jwtTokenProvider.createRefreshToken(user.getId());
 
-        // 4. 응답 반환
-        return LoginResponseDto.of(
-                accessToken,
-                refreshToken,
-                user.getId(),
-                user.getEmail(),
-                user.getNickname()
-        );
+        // 4) 응답 반환
+        return LoginResponseDto.of(accessToken, user);
     }
 
     @Transactional
     public SignupResponseDto signup(SignupRequestDto requestDto) {
-        // 1. 인증코드 검증
+        // 1) 인증코드 검증
         if (!"CRM101".equals(requestDto.getAuthCode())) {
             throw new IllegalArgumentException("인증코드가 틀렸습니다.");
         }
 
-        // 2. 이메일 중복 체크
+        // 2) 이메일 중복 체크
         if (userRepository.existsByEmail(requestDto.getEmail())) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
 
-        // 3. 닉네임 중복 체크
+        // 3) 닉네임 중복 체크
         if (userRepository.existsByNickname(requestDto.getNickname())) {
             throw new IllegalArgumentException("이미 사용 중인 닉네임입니다.");
         }
 
-        // 4. 비밀번호 암호화
+        // 4) 비밀번호 암호화
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
 
-        // 5. User 엔티티 생성
+        // 5) User 엔티티 생성
         User user = User.builder()
                 .email(requestDto.getEmail())
                 .passwordHash(encodedPassword)
@@ -73,11 +66,11 @@ public class AuthService {
                 .department(requestDto.getDepartment())
                 .build();
 
-        // 6. DB 저장
+        // 6) DB 저장
         User savedUser = userRepository.save(user);
 
-        // 7. 응답 반환
-        return SignupResponseDto.of(savedUser.getId(), savedUser.getEmail());
+        // 7) 응답 반환
+        return SignupResponseDto.of(savedUser);
     }
 
     public UserInfoResponseDto getUserInfo(Long userId) {
