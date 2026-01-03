@@ -36,6 +36,7 @@ public class AnswerLike {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class AnswerLikeId implements Serializable {
         private Long answer;
         private Long user;

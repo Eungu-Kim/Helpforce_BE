@@ -94,6 +94,7 @@ public class AnswerService {
 
         // 4. 답변 내용 수정
         answer.setBody(requestDto.getBody());
+        answerRepository.save(answer);
 
         // 5. 응답 DTO 생성
         return AnswerUpdateResponseDto.builder()
@@ -125,7 +126,7 @@ public class AnswerService {
 
         // 3. 작성자 본인 확인
         if (!answer.getUser().getId().equals(userId)) {
-            System.out.println("❌ 권한 없음: answer.user_id=" + answer.getUser().getId() + ", request userId=" + userId);
+            System.out.println("권한 없음: answer.user_id=" + answer.getUser().getId() + ", request userId=" + userId);
             throw new IllegalArgumentException("자신의 답변만 삭제할 수 있습니다.");
         }
 
@@ -137,7 +138,7 @@ public class AnswerService {
         // 5. Soft Delete (is_deleted = true)
         answer.setIsDeleted(true);
 
-        System.out.println("✅ 답변 삭제 성공!");
+        System.out.println("답변 삭제 성공!");
 
         // 6. 응답 DTO 생성
         return AnswerDeleteResponseDto.builder()

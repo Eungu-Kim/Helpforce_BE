@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AnswerLikeResponseDto {
+
     private Long answerId;
     private Boolean isLiked;  // 좋아요 상태
     private Long likeCount;   // 좋아요 개수

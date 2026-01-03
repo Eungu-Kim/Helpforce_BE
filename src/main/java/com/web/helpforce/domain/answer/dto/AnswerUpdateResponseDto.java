@@ -15,9 +15,6 @@ import java.time.LocalDateTime;
 public class AnswerUpdateResponseDto {
 
     private Long id;
-    
     private String body;
-    
-    @JsonProperty("updated_at")
     private LocalDateTime updatedAt;
 }
