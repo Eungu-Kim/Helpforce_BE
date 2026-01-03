@@ -6,6 +6,7 @@ import com.web.helpforce.domain.answer.dto.AnswerUpdateRequestDto;
 import com.web.helpforce.domain.answer.dto.AnswerUpdateResponseDto;
 import com.web.helpforce.domain.answer.dto.AnswerDeleteResponseDto;
 import com.web.helpforce.domain.answer.service.AnswerService;
+import com.web.helpforce.global.exception.UnauthorizedException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,22 +22,18 @@ public class AnswerController {
     private final AnswerService answerService;
 
     // 답변 등록 (댓글/대댓글)
-    @PostMapping("/questions/{questionId}/answers")
+    @PostMapping("/questions/{question_id}/answers")
     public ResponseEntity<AnswerCreateResponseDto> createAnswer(
             @PathVariable Long questionId,
             @Valid @RequestBody AnswerCreateRequestDto requestDto,
             Authentication authentication) {
 
         // 현재 로그인한 사용자 ID
-        Long userId;
-        if (authentication != null && authentication.isAuthenticated()) {
-            userId = Long.parseLong(authentication.getName());
-        } else {
-            // 임시: 인증 없을 때 기본 사용자 ID 3 사용 (테스트용)
-            userId = 3L;
-            System.out.println("⚠️ Authentication is null, using default userId: 3");
+        if (authentication == null || authentication.isAuthenticated()) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
 
+        Long userId = Long.parseLong(authentication.getName());
         AnswerCreateResponseDto response = answerService.createAnswer(questionId, requestDto, userId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -50,15 +47,11 @@ public class AnswerController {
             Authentication authentication) {
 
         // 현재 로그인한 사용자 ID
-        Long userId;
-        if (authentication != null && authentication.isAuthenticated()) {
-            userId = Long.parseLong(authentication.getName());
-        } else {
-            // 임시: 인증 없을 때 기본 사용자 ID 3 사용 (테스트용)
-            userId = 3L;
-            System.out.println("⚠️ Authentication is null, using default userId: 3");
+        if (authentication == null || authentication.isAuthenticated()) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
 
+        Long userId = Long.parseLong(authentication.getName());
         AnswerUpdateResponseDto response = answerService.updateAnswer(answerId, requestDto, userId);
 
         return ResponseEntity.ok(response);
@@ -71,15 +64,11 @@ public class AnswerController {
             Authentication authentication) {
 
         // 현재 로그인한 사용자 ID
-        Long userId;
-        if (authentication != null && authentication.isAuthenticated()) {
-            userId = Long.parseLong(authentication.getName());
-        } else {
-            // 임시: 인증 없을 때 기본 사용자 ID 3 사용 (테스트용)
-            userId = 3L;
-            System.out.println("⚠️ Authentication is null, using default userId: 3");
+        if (authentication == null || authentication.isAuthenticated()) {
+            throw new UnauthorizedException("로그인이 필요합니다.");
         }
 
+        Long userId = Long.parseLong(authentication.getName());
         AnswerDeleteResponseDto response = answerService.deleteAnswer(answerId, userId);
 
         return ResponseEntity.ok(response);
