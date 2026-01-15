@@ -161,9 +161,9 @@ Helpforce는 **Stateless JWT 인증 구조**로 설계되었습니다.
 
 | 역할 | 이름 |
 |------|------|
-| PL | 서승아 |
+| PM | 서승아 |
 | PL | 성원호 |
-| Backend | 김은수 |
+| Backend | **김은수** |
 | Backend | 김규남 |
 | Frontend | 이영호 |
 
