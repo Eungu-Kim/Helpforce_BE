@@ -1,5 +1,5 @@
 <p align="middle">
-  <img src="https://github.com/Eungu-Kim/Helpforce_BE/releases/download/v1.0/helpforce22.png" width="300"/>
+  <img src="https://github.com/Eungu-Kim/Helpforce_BE/releases/download/v1.0/helpforce22.png" width="200"/>
 </p>
 
 <h1 align="middle">Helpforce</h1>
